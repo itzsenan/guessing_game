@@ -21,7 +21,6 @@ def guessing_game(optimal_mode: bool):
 
     # Set all variables
     rand_int = random.randint(1, 100)
-    print(rand_int)
     highest_guess = 100
     lowest_guess = 1
     guessed = False
@@ -86,4 +85,3 @@ def main():
     ask_playing()
 
 main()
-
