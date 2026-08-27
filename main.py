@@ -1,6 +1,9 @@
+# Handles main guessing game, and prompts stats to write when needed
 import math
 import random
 import sys
+
+from stats import increase_stat, open_stats
 
 # Starting variables
 guessing = False
@@ -18,6 +21,7 @@ def guessing_game(optimal_mode: bool):
 
     # Set all variables
     rand_int = random.randint(1, 100)
+    print(rand_int)
     highest_guess = 100
     lowest_guess = 1
     guessed = False
@@ -50,6 +54,9 @@ def guessing_game(optimal_mode: bool):
             print("============ GAME WINNER ============")
             print(f"You have guessed the correct number of {rand_int} in {guesses}!")
             print("=====================================")
+
+            # Add 1 to stats win for that guesses amount
+            increase_stat(guesses)
             
             # Game over, reset back to asking to play
             guessing = False
@@ -64,10 +71,13 @@ def guessing_game(optimal_mode: bool):
 # Loop ask
 def ask_playing():
     answer = input("Do you want to play? [Y/n] ").lower()
+
     if answer == "n":
         sys.exit()
-    elif answer == "o": # O for optimal
+    elif answer == "o": # Optimal mode
         guessing_game(True)
+    elif answer == "stats":  # Shows stats
+        open_stats()
     else:
         guessing_game(False)
 
