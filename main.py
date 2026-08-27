@@ -1,6 +1,9 @@
-import random
 import math
-import tkinter as tk
+import random
+import sys
+
+# Starting variables
+guessing = False
 
 # Calculates optimal guess
 def calculate_optimal(highest_guess: int, lowest_guess: int) -> int:
@@ -38,14 +41,19 @@ def guessing_game(optimal_mode: bool):
             except ValueError:
                 if guess == "exit":
                     print("Exiting game...")
-                    exit()
+                    sys.exit()
                 print("That's not a number!")
 
         print("--------------------------------------")
 
         if int_guess == rand_int:
+            print("============ GAME WINNER ============")
             print(f"You have guessed the correct number of {rand_int} in {guesses}!")
-            guessed = True
+            print("=====================================")
+            
+            # Game over, reset back to asking to play
+            guessing = False
+            ask_playing()
         elif int_guess < rand_int:
             print("Your guess is lower than the number!")
             lowest_guess = max(lowest_guess, int_guess)
@@ -53,18 +61,19 @@ def guessing_game(optimal_mode: bool):
             print("Your guess is higher than the number!")
             highest_guess = min(highest_guess, int_guess)
 
-# Starting variables
-playing = True
-guessing = False
-guessed = False
-
-print("============ GUESSING GAME ============")
-
-while playing:
+# Loop ask
+def ask_playing():
     answer = input("Do you want to play? [Y/n] ").lower()
     if answer == "n":
-        playing = False
+        sys.exit()
     elif answer == "o": # O for optimal
         guessing_game(True)
     else:
         guessing_game(False)
+
+def main():
+    print("============ GUESSING GAME ============")
+    ask_playing()
+
+main()
+
