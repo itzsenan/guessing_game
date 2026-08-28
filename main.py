@@ -19,9 +19,30 @@ def guessing_game(optimal_mode: bool):
     else:
         print("------------ REGULAR MODE ------------")
 
+    setting_ints = True
+    highest = 100
+
+    while setting_ints:
+
+        answer = input("Input the range of the guess.\nEtc: 100 for [1-100]: ")
+        try:
+            highest = int(answer)
+            if highest < 1:
+                print("The number has to be higher than 1.")
+            else:
+                setting_ints = False
+                print(f"The range to guess is now: [1-{highest}]")
+        except ValueError:
+            if answer == "exit":
+                print("Exiting game...")
+                sys.exit()
+            print("That's not a number!")
+
+    print("--------------------------------------")
+
     # Set all variables
-    rand_int = random.randint(1, 100)
-    highest_guess = 100
+    rand_int = random.randint(1, highest)
+    highest_guess = highest
     lowest_guess = 1
     guessed = False
     guesses = 0
@@ -33,10 +54,10 @@ def guessing_game(optimal_mode: bool):
             if optimal_mode:
                 print(f"The optimal guess is {calculate_optimal(highest_guess, lowest_guess)}")
 
-            guess = input("Guess a number. [1-100] ")
+            guess = input(f"Guess a number. [1-{highest}] ")
             try:
                 int_guess = int(guess)
-                if int_guess > 100 or int_guess < 1:
+                if int_guess > highest or int_guess < 1:
                         print("That number is not in the range!")
                 else:
                     guessing = False
