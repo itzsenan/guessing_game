@@ -11,7 +11,7 @@ guessing = False
 # Calculates optimal guess
 def calculate_optimal(highest_guess: int, lowest_guess: int) -> int:
     return math.floor((highest_guess + lowest_guess) / 2)
-
+    
 # Game function
 def guessing_game(optimal_mode: bool):
     if optimal_mode:
