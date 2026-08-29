@@ -3,7 +3,7 @@ import math
 import random
 import sys
 
-from stats import increase_stat, open_stats
+from stats import increase_stat, open_stats, text_colours
 
 # Starting variables
 guessing = False
@@ -15,9 +15,9 @@ def calculate_optimal(highest_guess: int, lowest_guess: int) -> int:
 # Game function
 def guessing_game(optimal_mode: bool):
     if optimal_mode:
-        print("------------ OPTIMAL MODE ------------")
+        print(f"{text_colours.GREEN}------------ OPTIMAL MODE ------------{text_colours.END}")
     else:
-        print("------------ REGULAR MODE ------------")
+        print(f"{text_colours.GREEN}------------ REGULAR MODE ------------{text_colours.END}")
 
     setting_ints = True
     highest = 100
@@ -38,7 +38,7 @@ def guessing_game(optimal_mode: bool):
                 sys.exit()
             print("That's not a number!")
 
-    print("--------------------------------------")
+    print(f"{text_colours.GREEN}--------------------------------------{text_colours.END}")
 
     # Set all variables
     rand_int = random.randint(1, highest)
@@ -68,12 +68,12 @@ def guessing_game(optimal_mode: bool):
                     sys.exit()
                 print("That's not a number!")
 
-        print("--------------------------------------")
+        print(f"{text_colours.GREEN}--------------------------------------{text_colours.END}")
 
         if int_guess == rand_int:
-            print("============ GAME WINNER ============")
+            print(f"{text_colours.GREEN}============ GAME WINNER ============{text_colours.END}")
             print(f"You have guessed the correct number of {rand_int} in {guesses}!")
-            print("=====================================")
+            print(f"{text_colours.GREEN}====================================={text_colours.END}")
 
             # Add 1 to stats win for that guesses amount
             increase_stat(guesses)
@@ -90,19 +90,25 @@ def guessing_game(optimal_mode: bool):
 
 # Loop ask
 def ask_playing():
-    answer = input("Do you want to play? [Y/n] ").lower()
+    asking = True
 
-    if answer == "n":
-        sys.exit()
-    elif answer == "o": # Optimal mode
-        guessing_game(True)
-    elif answer == "stats":  # Shows stats
-        open_stats()
-    else:
-        guessing_game(False)
+    while asking:
+        answer = input("Do you want to play? [y/n] ").lower()
+        asking = False
+        
+        if answer == "n" or answer == "exit":
+            sys.exit()
+        elif answer == "o": # Optimal mode
+            guessing_game(True)
+        elif answer == "stats":  # Shows stats
+            open_stats()
+        elif answer == "y":
+            guessing_game(False)
+        else:
+            asking = True
 
 def main():
-    print("============ GUESSING GAME ============")
+    print(f"{text_colours.GREEN}============ GUESSING GAME ============{text_colours.END}")
     ask_playing()
 
 main()

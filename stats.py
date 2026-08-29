@@ -1,3 +1,4 @@
+from markdown_it.rules_inline import text
 import json
 import sys
 
@@ -9,6 +10,12 @@ DEFAULT_JSON = {
   "more7": 0
 }
 
+class text_colours:
+    GREEN = '\033[1;32m'
+    DARK_GREEN = '\x1b[38;5;22m'
+    RED = '\033[0;31m'
+    END = '\033[0m'
+
 # Main JSON functions
 
 def read_json() -> dict:
@@ -17,20 +24,21 @@ def read_json() -> dict:
             data = json.load(file)
         return data
     except FileNotFoundError:
-        print(f"Error: {FILE_PATH} not found. \nCreating new file..")
+        print(f"{text_colours.DARK_GREEN}Error: {FILE_PATH} not found. \nCreating new file..")
         fix_json_file()
-        print("Created new file. Please redo function.")
-        sys.exit()
+        print(f"Created new file. Retrying read .json..{text_colours.END}")
+        with open(FILE_PATH, "r") as file:
+            data = json.load(file)
+        return data
 
 def write_json(data: dict):
     try:
         with open(FILE_PATH, "w", encoding="utf-8") as file:
             json.dump(data, file, ensure_ascii=False, indent=4)
     except FileNotFoundError:
-        print(f"Error: {FILE_PATH} not found. \nCreating new file..")
         fix_json_file()
-        print("Created new file. Please redo function.")
-        sys.exit()
+        with open(FILE_PATH, "w", encoding="utf-8") as file:
+            json.dump(data, file, ensure_ascii=False, indent=4)
 
 # Game functions
 
@@ -59,12 +67,12 @@ def fix_json_file():
 
 def print_stats():
     data = read_json()
-    print("========== STATS MENU ==========")
+    print(f"{text_colours.GREEN}======== PRINTING STATS ========{text_colours.END}")
     print(f"Less than 4: {data["less4"]}")
     print(f"Less than 6: {data["less6"]}")
     print(f"Less than 8: {data["less8"]}")
     print(f"More than 7: {data["more7"]}")
-    print("================================")
+    print(f"{text_colours.GREEN}================================{text_colours.END}")
     help_input()
 
 def stats_help():
@@ -76,23 +84,34 @@ def help_input():
     answer = input().lower()
     if answer == "exit":
         sys.exit()
-        
+
     elif answer == "clear":
-        answer = input("Are you sure? This cannot be undone. [y/N] ").lower()
+        # Check if data is empty, if so, no need to prompt 
+        data = read_json()
+        amt_clear = 0
+        for key in data:
+            if data[key] == 0:
+                amt_clear += 1
+                if amt_clear == len(data):
+                    print("Stats are already cleared.")
+                    help_input()
+                    return None
+        
+        answer = input(f"{text_colours.RED}Are you sure? This cannot be undone. [y/N] {text_colours.END}").lower()
         if answer == "y":
             fix_json_file()
-            print("Cleared stats.")
+            print(f"{text_colours.RED}Cleared stats.{text_colours.END}")
             help_input()
-            
+
     elif answer == "print":
         print_stats()
-        
+
     else:
         stats_help() # If not entered valid command show list of commands and prompt input again
         help_input()
 
 def open_stats():
-    print("========== STATS MENU ==========")
+    print(f"{text_colours.GREEN}========== STATS MENU =========={text_colours.END}")
     stats_help()
-    print("================================")
+    print(f"{text_colours.GREEN}================================{text_colours.END}")
     help_input()
